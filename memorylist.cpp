@@ -56,15 +56,20 @@ MemoryElement* MemoryList::fit(int sz)
     return scheduler->memory_fit(first, sz);
 }
 
-void MemoryList::del_element(int num)
+int MemoryList::del_element(int num)
 {
     MemoryElement *e;
     MemoryElement *e_prev;
     MemoryElement *e_next;
-
+    int i = 1;
     e = first;
-    for(int i = 1; i<num; i++)
+
+    while(i<num)
     {
+        if(!e)
+            return -1;
+        if(e->getStatus() == 'P')
+            i++;
         e = e->getNext();
     }
 
@@ -89,7 +94,7 @@ void MemoryList::del_element(int num)
     {
         e->setStatus('L');
     }
-
+    return 0;
 }
 
 MemoryElement* MemoryList::find_prev(MemoryElement *current)
@@ -115,4 +120,18 @@ void MemoryList::print_list()
         cout << c->getStatus() << ", " << c->getPos() << ", " << c->getSz() << endl;
         c = c->getNext();
     }
+}
+
+double MemoryList::memory_allocated_percentage()
+{
+    MemoryElement *c = first;
+    double sum = 0;
+
+    while (c)
+    {
+        if(c->getStatus() == 'P')
+            sum += c->getSz();
+        c = c->getNext();
+    }
+    return (sum/sz_max)*100;
 }

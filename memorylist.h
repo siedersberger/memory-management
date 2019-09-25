@@ -10,9 +10,10 @@ private:
 public:
     MemoryList(int sz, int scheduler_choice);
     ~MemoryList();
-    void add_element(int sz);
-    void del_element(int num);
     MemoryElement* fit(int sz);
     MemoryElement* find_prev(MemoryElement *current);
+    double memory_allocated_percentage();
+    void add_element(int sz);
+    int del_element(int num);
     void print_list();
 };

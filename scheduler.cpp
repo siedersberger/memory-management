@@ -6,7 +6,8 @@ Scheduler* Scheduler::make_scheduler(int choice)
         return new FirstFit();
     else if (choice == 2)
         return new BestFit();
-
+    else if (choice == 3)
+        return new WorstFit();
     return NULL;
 }
 
@@ -47,4 +48,26 @@ MemoryElement* BestFit::memory_fit(MemoryElement *head, int size)
         current = current->getNext();
     }
     return bf_element;
+}
+
+MemoryElement* WorstFit::memory_fit(MemoryElement *head, int size)
+{
+    int bigger_diff = -1;
+    int diff;
+    MemoryElement *current = head;
+    MemoryElement *wf_element = NULL;
+    while (current)
+    {
+        if(current->getStatus() == 'L' && current->getSz() >= size)
+        {
+            diff = current->getSz() - size;
+            if(diff > bigger_diff)
+            {
+                wf_element = current;
+                bigger_diff = diff;
+            }
+        }
+        current = current->getNext();
+    }
+    return wf_element;
 }

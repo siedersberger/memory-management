@@ -18,3 +18,9 @@ class BestFit: public Scheduler
     public:
         MemoryElement *memory_fit(MemoryElement * head, int size);
 };
+
+class WorstFit: public Scheduler
+{
+    public:
+        MemoryElement *memory_fit(MemoryElement * head, int size);
+};
