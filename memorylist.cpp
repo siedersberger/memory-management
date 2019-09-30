@@ -15,6 +15,7 @@ MemoryList::MemoryList(int sz, int scheduler_choice)
 MemoryList::~MemoryList()
 {
     delete first;
+    delete scheduler;
 }
 
 void MemoryList::add_element(int sz)
@@ -61,7 +62,7 @@ int MemoryList::del_element(int num)
     MemoryElement *e;
     MemoryElement *e_prev;
     MemoryElement *e_next;
-    int i = 1;
+    int i = 0;
     e = first;
 
     while(i<num)
@@ -70,7 +71,8 @@ int MemoryList::del_element(int num)
             return -1;
         if(e->getStatus() == 'P')
             i++;
-        e = e->getNext();
+        if(i<num)
+            e = e->getNext();
     }
 
     e_prev = find_prev(e);
@@ -135,3 +137,20 @@ double MemoryList::memory_allocated_percentage()
     }
     return (sum/sz_max)*100;
 }
+
+string MemoryList::mem_status()
+{
+    MemoryElement *c = first;
+    string status;
+    while (c)
+    {
+        if(c->getStatus() == 'P')
+            status += '1';
+        else
+            status += '0';
+        
+        c = c->getNext();
+    }
+    return status;
+}
+    

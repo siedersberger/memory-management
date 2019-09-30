@@ -13,7 +13,8 @@ public:
     MemoryElement* fit(int sz);
     MemoryElement* find_prev(MemoryElement *current);
     double memory_allocated_percentage();
-    void add_element(int sz);
     int del_element(int num);
+    string mem_status();
+    void add_element(int sz);
     void print_list();
 };
