@@ -6,38 +6,33 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    int memory_size;
-    int algorithm_choice;
-    if(argc < 3)
+        
+    if(argc < 2)
     {
-        cout << "You must pass the follow arguments:" << endl;
-        cout << " - memory size; \n - fit algorithm, (1) for first fit, (2) for best fit and (3) for worst fit." << endl;
+        cout << "\n\n ERROR - Memory size argument missed. \n\n";
         return 0;
-    }else{
-        memory_size = atoi(argv[1]);
-        algorithm_choice = atoi(argv[2]);
+    }
+    
+    int memory_size = atoi(argv[1]);
+    MemoryList ml_ff(memory_size, 1);
+    MemoryList ml_bf(memory_size, 2);
+    MemoryList ml_wf(memory_size, 3);
+
+    for(int i = 0; i<1000; i++)
+    {
+        ml_ff.add_element(rand() % 50 + 10);
+        ml_bf.add_element(rand() % 50 + 10);
+        ml_wf.add_element(rand() % 50 + 10);
+
+        ml_ff.del_element(rand() % ml_ff.getLen());
+        ml_bf.del_element(rand() % ml_bf.getLen());
+        ml_wf.del_element(rand() % ml_ff.getLen());
     }
 
-    MemoryList ml(memory_size, algorithm_choice);
-
-
-
     //testing add element (schedule)
-    cout << "Memory allocated percentage: " << ml.memory_allocated_percentage() << "%" << endl;
-    ml.add_element(10);
-    ml.add_element(15);
-    ml.add_element(10);
-    ml.add_element(5);
-    cout << "Memory allocated percentage: " << ml.memory_allocated_percentage() << "%" << endl;
-    ml.print_list();
-    //testing del element
-    ml.del_element(2);
-    ml.print_list();
-    ml.del_element(10);
-    ml.print_list();
-    ml.add_element(5);
-    ml.print_list();
-    cout << "Memory allocated percentage: " << ml.memory_allocated_percentage() << "%" << endl;
+    cout << "FISRT FIT memory allocated percentage: " << ml_ff.memory_allocated_percentage() << "%" << endl;
+    cout << "BEST FIT memory allocated percentage: " << ml_bf.memory_allocated_percentage() << "%" << endl;
+    cout << "WORST FIT memory allocated percentage: " << ml_wf.memory_allocated_percentage() << "%" << endl;
 
     return 0;
 }

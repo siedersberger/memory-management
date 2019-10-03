@@ -5,65 +5,70 @@ using namespace std;
 
 MemoryList::MemoryList(int sz, int scheduler_choice)
 {
-    scheduler = Scheduler::make_scheduler(scheduler_choice);
+    fit_algorithm = FitAlgorithm::algorithm_factory(scheduler_choice);
     MemoryElement *new_p = new MemoryElement('L', 0, sz);
-    first = new_p;
-    last = new_p;
+    head = new_p;
+    tail = new_p;
     sz_max = sz;
+    len = 0;
 }
 
 MemoryList::~MemoryList()
 {
-    delete first;
-    delete scheduler;
+    delete head;
+    delete fit_algorithm;
 }
 
-void MemoryList::add_element(int sz)
+int MemoryList::add_element(int sz)
 {
     MemoryElement *element = fit(sz);
-    MemoryElement *element_prev = find_prev(element);
 
     if (!element)
     {
-        cout << "Memory full." << endl;
+        return -1;
+    }
+    
+    MemoryElement *element_prev = find_prev(element);
+    MemoryElement *new_p = new MemoryElement('P', element->getPos(), sz);
+    
+    if(!element_prev)
+    {
+        head = new_p;
     }
     else
     {
-        MemoryElement *new_p = new MemoryElement('P', element->getPos(), sz);
-        if(!element_prev)
-        {
-            first = new_p;
-        }
-        else
-        {
-            element_prev->setNext(new_p);
-        }
-        
-        if(element->getSz() == sz)
-        {
-            new_p->setNext(element->getNext());
-        }
-        else
-        {
-            element->setSz(element->getSz()-sz);
-            element->setPos(element->getPos()+sz);
-            new_p->setNext(element);
-        }            
-    }    
+        element_prev->setNext(new_p);
+    }
+    
+    if(element->getSz() == sz)
+    {
+        new_p->setNext(element->getNext());
+    }
+    else
+    {
+        element->setSz(element->getSz()-sz);
+        element->setPos(element->getPos()+sz);
+        new_p->setNext(element);
+    }            
+    len++;
+    return 0; 
 }
 
 MemoryElement* MemoryList::fit(int sz)
 {
-    return scheduler->memory_fit(first, sz);
+    return fit_algorithm->memory_fit(head, sz);
 }
 
 int MemoryList::del_element(int num)
 {
+    if(num < 1)
+        return -1;
+
     MemoryElement *e;
     MemoryElement *e_prev;
     MemoryElement *e_next;
     int i = 0;
-    e = first;
+    e = head;
 
     while(i<num)
     {
@@ -101,7 +106,7 @@ int MemoryList::del_element(int num)
 
 MemoryElement* MemoryList::find_prev(MemoryElement *current)
 {
-    MemoryElement *e = first;   
+    MemoryElement *e = head;   
     while(e->getNext())
     {
         if(e->getNext() == current)
@@ -116,7 +121,7 @@ MemoryElement* MemoryList::find_prev(MemoryElement *current)
 void MemoryList::print_list()
 {
     cout << "Printing memory list..." << endl;
-    MemoryElement *c = first;
+    MemoryElement *c = head;
     while (c)
     {
         cout << c->getStatus() << ", " << c->getPos() << ", " << c->getSz() << endl;
@@ -126,7 +131,7 @@ void MemoryList::print_list()
 
 double MemoryList::memory_allocated_percentage()
 {
-    MemoryElement *c = first;
+    MemoryElement *c = head;
     double sum = 0;
 
     while (c)
@@ -140,7 +145,7 @@ double MemoryList::memory_allocated_percentage()
 
 string MemoryList::mem_status()
 {
-    MemoryElement *c = first;
+    MemoryElement *c = head;
     string status;
     while (c)
     {
@@ -154,3 +159,7 @@ string MemoryList::mem_status()
     return status;
 }
     
+int MemoryList::getLen()
+{
+    return len;
+}

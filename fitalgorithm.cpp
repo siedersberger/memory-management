@@ -1,6 +1,6 @@
-#include "scheduler.h"
+#include "fitalgorithm.h"
 
-Scheduler* Scheduler::make_scheduler(int choice)
+FitAlgorithm* FitAlgorithm::algorithm_factory(int choice)
 {
     if(choice == 1)
         return new FirstFit();
@@ -61,7 +61,7 @@ MemoryElement* WorstFit::memory_fit(MemoryElement *head, int size)
         if(current->getStatus() == 'L' && current->getSz() >= size)
         {
             diff = current->getSz() - size;
-            if(diff > bigger_diff)
+            if(diff >= bigger_diff)
             {
                 wf_element = current;
                 bigger_diff = diff;
